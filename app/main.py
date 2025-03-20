@@ -91,6 +91,7 @@ def home():
         screenshot_checked = "get_screenshot" in checkbox_list
         auto_checked = "auto_toggled" in checkbox_list
         custom_message_input = request.form["custom_message_content"]
+        unstable_rate_input = request.form["unstable_rate_input"]
         results = ""
 
         # Get score information from user input
@@ -109,6 +110,7 @@ def home():
                 input=url,
                 screenshot_checked=screenshot_checked,
                 custom_message_input=custom_message_input,
+                unstable_rate_input=unstable_rate_input,
                 auto_checked=auto_checked,
             )
         except IndexError:
@@ -122,11 +124,24 @@ def home():
                 input=url,
                 screenshot_checked=screenshot_checked,
                 custom_message_input=custom_message_input,
+                unstable_rate_input=unstable_rate_input,
                 auto_checked=auto_checked,
             )
 
         # Get title of score
         title = create_title(score)
+
+        # Insert converted unstable rate
+        if unstable_rate_input and not unstable_rate_input.isspace():
+            title += f" | "
+            ur = float(unstable_rate_input)
+            if "DT" in score.mods or "NC" in score.mods:
+                ur = f"{ur / 1.5:.2f}".rstrip('0').rstrip('.') + " cv."
+            elif 'HT' in score.mods:
+                ur = f"{ur / 0.75:.2f}".rstrip('0').rstrip('.') + " cv."
+            else:
+                ur = unstable_rate_input
+            title += f"{ur} UR"
 
         # Insert custom message, if custom message is just whitespace,
         # leave blank without |
@@ -154,6 +169,7 @@ def home():
         results = ""
         url = ""
         custom_message_input = ""
+        unstable_rate_input = ""
         screenshot_checked = True
         auto_checked = False
 
@@ -165,6 +181,7 @@ def home():
         input=url,
         screenshot_checked=screenshot_checked,
         custom_message_input=custom_message_input,
+        unstable_rate_input=unstable_rate_input,
         auto_checked=auto_checked,
     )
 
